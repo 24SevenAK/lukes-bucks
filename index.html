@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke's Bucks 🍺</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #F5C842;
+  --gold2: #FFE27A;
+  --black: #080808;
+  --dark: #111;
+  --card: #161616;
+  --card2: #1e1e1e;
+  --border: #2a2a2a;
+  --white: #F0EBE1;
+  --muted: #666;
+  --yes: #2DC653;
+  --no: #E63946;
+  --maybe: #F4A226;
+  --pending: #444;
+  --blue: #4ECDC4;
+  --fot-color: #FF6B9D;
+  --friend-color: #4ECDC4;
+  --family-color: #2DC653;
+  --other-color: #F4A226;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
+  opacity:0.025;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* NAV */
+.nav {
+  position: sticky; top:0; z-index:100;
+  background: rgba(8,8,8,0.93);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+}
+.nav-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.1em;
+  background: linear-gradient(120deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 14px 0;
+}
+.nav-tabs { display:flex; }
+.nav-tab {
+  background: none; border: none;
+  color: var(--muted);
+  font-family: 'Syne', sans-serif;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 18px 16px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+.nav-tab::after {
+  content:''; position:absolute;
+  bottom:0; left:16px; right:16px; height:2px;
+  background: var(--gold);
+  transform: scaleX(0); transition: transform 0.25s;
+}
+.nav-tab.active { color: var(--white); }
+.nav-tab.active::after { transform: scaleX(1); }
+.nav-tab:hover { color: var(--white); }
+
+/* PAGES */
+.page { display:none; padding: 36px 32px; max-width: 1100px; margin: 0 auto; }
+.page.active { display:block; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes float { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-10px) rotate(4deg)} }
+
+/* ── HOME ── */
+.hero { text-align:center; padding: 52px 0 44px; animation: fadeUp .5s ease both; }
+.hero-emoji { font-size:60px; display:block; margin-bottom:10px; animation: float 3s ease-in-out infinite; }
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(76px,13vw,150px);
+  line-height: 0.88;
+  letter-spacing: 0.03em;
+  background: linear-gradient(135deg, var(--gold) 0%, #fff7a0 45%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 10px;
+}
+.hero-date {
+  display: inline-flex; align-items:center; gap:8px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 100px; padding: 8px 22px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform:uppercase;
+  color: var(--gold); margin-top: 14px;
+}
+.hero-date em { color: var(--muted); font-style:normal; font-weight:400; }
+
+/* TICKER */
+.ticker-wrap {
+  overflow:hidden; border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  padding:10px 0; margin: 28px -32px; background:#0c0c0c;
+}
+.ticker { display:flex; gap:48px; white-space:nowrap; animation: ticker 24s linear infinite; }
+.ticker .dim  { font-family:'Bebas Neue'; font-size:12px; letter-spacing:.18em; color:#333; }
+.ticker .hi   { font-family:'Bebas Neue'; font-size:12px; letter-spacing:.18em; color:var(--gold); }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* STATS */
+.stats-row {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:12px;
+  margin-bottom:28px; animation: fadeUp .5s .1s ease both;
+}
+@media(min-width:580px){ .stats-row{grid-template-columns:repeat(4,1fr)} }
+.stat {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:20px 16px; text-align:center; position:relative; overflow:hidden;
+  transition: transform .2s, border-color .2s;
+}
+.stat:hover { transform:translateY(-3px); border-color:#3a3a3a; }
+.stat-n { font-family:'Bebas Neue'; font-size:54px; line-height:1; margin-bottom:4px; }
+.stat-l { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); }
+.stat-bar { position:absolute; bottom:0; left:0; right:0; height:3px; }
+.s-total .stat-n{color:var(--gold)}  .s-total .stat-bar{background:var(--gold)}
+.s-yes   .stat-n{color:var(--yes)}   .s-yes   .stat-bar{background:var(--yes)}
+.s-maybe .stat-n{color:var(--maybe)} .s-maybe .stat-bar{background:var(--maybe)}
+.s-no    .stat-n{color:var(--no)}    .s-no    .stat-bar{background:var(--no)}
+
+/* RSVP BAR */
+.rsvp-bar-wrap {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:22px 24px; margin-bottom:24px; animation: fadeUp .5s .2s ease both;
+}
+.rsvp-bar { display:flex; height:12px; border-radius:100px; overflow:hidden; gap:2px; margin:12px 0; }
+.rb-yes     { background:var(--yes);     transition:flex .8s cubic-bezier(.34,1.56,.64,1); }
+.rb-maybe   { background:var(--maybe);   transition:flex .8s cubic-bezier(.34,1.56,.64,1); }
+.rb-no      { background:var(--no);      transition:flex .8s cubic-bezier(.34,1.56,.64,1); }
+.rb-pending { background:var(--pending); transition:flex .8s cubic-bezier(.34,1.56,.64,1); }
+.rsvp-legend { display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--muted); font-weight:600; }
+.rsvp-legend span { display:flex; align-items:center; gap:6px; }
+.dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+
+.sec-title {
+  font-family:'Bebas Neue'; font-size:30px; letter-spacing:.1em;
+  color:var(--gold); margin-bottom:18px;
+  display:flex; align-items:center; gap:10px;
+}
+
+/* GROUP CARDS */
+.group-cards {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:12px; margin-bottom:40px; animation: fadeUp .5s .3s ease both;
+}
+.grp-card {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:18px 20px; transition: transform .2s, border-color .2s;
+}
+.grp-card:hover { transform:translateY(-3px); border-color:#3a3a3a; }
+.grp-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; margin-bottom:8px; }
+.grp-num { font-family:'Bebas Neue'; font-size:46px; color:var(--white); line-height:1; }
+
+/* ── SCHEDULE ── */
+.schedule-hero { text-align:center; padding:40px 0 32px; animation: fadeUp .5s ease both; }
+.schedule-hero h2 {
+  font-family:'Bebas Neue'; font-size:clamp(50px,9vw,100px); letter-spacing:.05em;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  line-height:.92; margin-bottom:10px;
+}
+.date-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(245,200,66,.1); border:1px solid rgba(245,200,66,.3);
+  border-radius:100px; padding:8px 22px;
+  font-size:14px; font-weight:700; letter-spacing:.07em; color:var(--gold);
+}
+
+/* COUNTDOWN */
+.cd-strip {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+  background:var(--card); border:1px solid rgba(245,200,66,.2);
+  border-radius:14px; padding:22px; margin-bottom:36px;
+  animation: fadeUp .5s .05s ease both;
+}
+.cd-unit { text-align:center; }
+.cd-num { font-family:'Bebas Neue'; font-size:46px; line-height:1; color:var(--gold); }
+.cd-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); margin-top:4px; }
+
+/* TIMELINE */
+.timeline { position:relative; padding-left:56px; margin-top:36px; }
+.timeline::before {
+  content:''; position:absolute; left:18px; top:24px; bottom:24px;
+  width:2px; background:linear-gradient(to bottom,var(--gold),transparent);
+}
+.tl-item { position:relative; margin-bottom:24px; }
+.tl-item:nth-child(1){animation:fadeUp .5s .1s ease both}
+.tl-item:nth-child(2){animation:fadeUp .5s .2s ease both}
+.tl-item:nth-child(3){animation:fadeUp .5s .3s ease both}
+.tl-item:nth-child(4){animation:fadeUp .5s .4s ease both}
+.tl-dot {
+  position:absolute; left:-43px; top:22px;
+  width:13px; height:13px; border-radius:50%;
+  border:2px solid var(--gold); background:var(--black); z-index:1;
+}
+.tl-dot.lit { background:var(--gold); box-shadow:0 0 14px rgba(245,200,66,.6); }
+.tl-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:22px 26px;
+  transition: border-color .2s, transform .2s;
+}
+.tl-card:hover { border-color:#3a3a3a; transform:translateX(4px); }
+.tl-card.gold { border-color:rgba(245,200,66,.3); background:linear-gradient(135deg,rgba(245,200,66,.05),var(--card)); }
+.tl-time { font-family:'Bebas Neue'; font-size:26px; letter-spacing:.08em; color:var(--gold); margin-bottom:3px; }
+.tl-name { font-size:19px; font-weight:800; margin-bottom:6px; }
+.tl-desc { font-size:14px; color:var(--muted); line-height:1.65; }
+.tl-tags { margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
+.tl-tag {
+  display:inline-block; font-size:11px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:3px 11px; border-radius:100px;
+}
+.t-bbq    { background:rgba(244,162,38,.14); color:var(--maybe); border:1px solid rgba(244,162,38,.3); }
+.t-venue  { background:rgba(78,205,196,.11);  color:var(--blue);  border:1px solid rgba(78,205,196,.3); }
+.t-main   { background:rgba(245,200,66,.11);  color:var(--gold);  border:1px solid rgba(245,200,66,.3); }
+.t-travel { background:rgba(155,93,229,.11);  color:#9B5DE5;      border:1px solid rgba(155,93,229,.3); }
+
+/* ── GUESTS ── */
+.toolbar {
+  display:flex; align-items:center; gap:10px; margin-bottom:22px;
+  flex-wrap:wrap; animation: fadeUp .5s ease both;
+}
+.search-box {
+  flex:1; min-width:180px;
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:10px 16px; color:var(--white); font-family:'Syne'; font-size:14px;
+  outline:none; transition:border-color .2s;
+}
+.search-box::placeholder{color:var(--muted)}
+.search-box:focus{border-color:var(--gold)}
+.filter-btn {
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:10px 15px; color:var(--muted); font-family:'Syne'; font-size:12px;
+  font-weight:700; cursor:pointer; transition:all .2s; white-space:nowrap;
+}
+.filter-btn:hover{border-color:#444;color:var(--white)}
+.filter-btn.active{background:rgba(245,200,66,.1);border-color:rgba(245,200,66,.4);color:var(--gold)}
+.add-btn {
+  background:var(--gold); border:none; border-radius:10px;
+  padding:10px 20px; color:var(--black); font-family:'Syne';
+  font-size:13px; font-weight:800; cursor:pointer;
+  transition:all .2s; white-space:nowrap; letter-spacing:.04em;
+}
+.add-btn:hover{background:var(--gold2);transform:translateY(-1px)}
+
+.table-wrap { overflow-x:auto; border-radius:14px; border:1px solid var(--border); animation: fadeUp .5s .1s ease both; }
+.guest-table { width:100%; border-collapse:collapse; }
+.guest-table th {
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em;
+  color:var(--muted); padding:11px 16px; text-align:left;
+  border-bottom:1px solid var(--border); background:var(--dark);
+}
+.guest-row { border-bottom:1px solid #181818; transition:background .15s; }
+.guest-row:hover{background:var(--card2)}
+.guest-row.hidden{display:none}
+.guest-table td { padding:11px 16px; font-size:14px; vertical-align:middle; }
+.name-cell { font-weight:700; font-size:15px; }
+
+/* TAGS */
+.tag-pill {
+  display:inline-block; font-size:11px; font-weight:700;
+  padding:3px 10px; border-radius:100px; letter-spacing:.05em;
+}
+.t-pill-friend { background:rgba(78,205,196,.12); color:var(--friend-color); border:1px solid rgba(78,205,196,.25); }
+.t-pill-family { background:rgba(45,198,83,.12);  color:var(--family-color); border:1px solid rgba(45,198,83,.25); }
+.t-pill-fot    { background:rgba(255,107,157,.12); color:var(--fot-color);    border:1px solid rgba(255,107,157,.25); }
+.t-pill-other  { background:rgba(244,162,38,.12);  color:var(--other-color);  border:1px solid rgba(244,162,38,.25); }
+.t-pill-groom  { background:rgba(245,200,66,.12);  color:var(--gold);         border:1px solid rgba(245,200,66,.3); }
+
+/* RSVP */
+.rsvp-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:12px; font-weight:700; padding:4px 12px;
+  border-radius:100px; cursor:pointer; transition:all .15s;
+  border:1px solid transparent; white-space:nowrap;
+}
+.rv-yes     { background:rgba(45,198,83,.15);  color:var(--yes);   border-color:rgba(45,198,83,.3); }
+.rv-no      { background:rgba(230,57,70,.15);  color:var(--no);    border-color:rgba(230,57,70,.3); }
+.rv-maybe   { background:rgba(244,162,38,.15); color:var(--maybe); border-color:rgba(244,162,38,.3); }
+.rv-pending { background:rgba(68,68,68,.25);   color:#777;         border-color:rgba(68,68,68,.3); }
+.rsvp-badge:hover{transform:scale(1.05)}
+
+.action-btn {
+  background:none; border:none; color:var(--muted); cursor:pointer;
+  font-size:15px; padding:4px 7px; border-radius:6px; transition:all .15s;
+}
+.action-btn:hover{background:var(--card2);color:var(--white)}
+.action-btn.del:hover{color:var(--no)}
+
+/* NOTES */
+.notes-input {
+  background:none; border:none; color:var(--muted);
+  font-family:'Syne'; font-size:13px; outline:none; width:100%; cursor:text;
+}
+.notes-input:focus{color:var(--white)}
+.notes-input::placeholder{color:#3a3a3a}
+
+/* EMPTY */
+.empty-state { text-align:center; padding:56px 20px; color:var(--muted); }
+.empty-state div:first-child{font-size:38px;margin-bottom:10px}
+
+/* MODAL */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.82); backdrop-filter:blur(8px);
+  z-index:200; align-items:center; justify-content:center;
+}
+.modal-overlay.open{display:flex}
+.modal {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:20px; padding:32px; width:100%; max-width:420px; margin:20px;
+  animation: modalIn .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.9)translateY(20px)}to{opacity:1;transform:scale(1)translateY(0)}}
+.modal h3 { font-family:'Bebas Neue'; font-size:28px; letter-spacing:.08em; color:var(--gold); margin-bottom:22px; }
+.form-group{margin-bottom:14px}
+.form-label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:7px; }
+.form-input,.form-select {
+  width:100%; background:var(--dark); border:1px solid var(--border);
+  border-radius:10px; padding:11px 14px; color:var(--white);
+  font-family:'Syne'; font-size:14px; outline:none; transition:border-color .2s; appearance:none;
+}
+.form-input:focus,.form-select:focus{border-color:var(--gold)}
+.form-select option{background:var(--dark)}
+.modal-actions{display:flex;gap:10px;margin-top:22px}
+.btn-cancel {
+  flex:1; background:var(--dark); border:1px solid var(--border); border-radius:10px;
+  padding:12px; color:var(--muted); font-family:'Syne'; font-weight:700; cursor:pointer; font-size:14px; transition:all .2s;
+}
+.btn-cancel:hover{color:var(--white);border-color:#444}
+.btn-save {
+  flex:2; background:var(--gold); border:none; border-radius:10px;
+  padding:12px; color:var(--black); font-family:'Syne'; font-weight:800; cursor:pointer; font-size:14px; transition:all .2s;
+}
+.btn-save:hover{background:var(--gold2)}
+
+@media(max-width:680px){
+  .page{padding:24px 16px}
+  .nav{padding:0 16px}
+  .nav-tab{padding:14px 10px;font-size:11px}
+  .ticker-wrap{margin:24px -16px}
+  .timeline{padding-left:42px}
+  .timeline::before{left:12px}
+  .tl-dot{left:-34px}
+  .guest-table th:nth-child(4),.guest-table td:nth-child(4){display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">Luke's Bucks 🍺</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('home',this)">Overview</button>
+    <button class="nav-tab" onclick="showPage('schedule',this)">Schedule</button>
+    <button class="nav-tab" onclick="showPage('guests',this)">Guests</button>
+  </div>
+</nav>
+
+<!-- ════ HOME ════ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <span class="hero-emoji">🍺</span>
+    <h1>Luke's Bucks</h1>
+    <div class="hero-date">📅 Friday 1st August 2025 <em>·</em> 2PM Onwards</div>
+  </div>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="hi">★ LUKE'S BUCKS PARTY ★</span>&nbsp;&nbsp;&nbsp;
+      <span class="dim">🍺 THE LEGEND BEGINS</span>&nbsp;&nbsp;&nbsp;
+      <span class="hi">★ 1ST AUGUST 2025 ★</span>&nbsp;&nbsp;&nbsp;
+      <span class="dim">🏠 BBQ AT LUKE'S · 2PM</span>&nbsp;&nbsp;&nbsp;
+      <span class="hi">★ P1 ENTERTAINMENT · 4PM ★</span>&nbsp;&nbsp;&nbsp;
+      <span class="dim">🔥 UNTIL LATE</span>&nbsp;&nbsp;&nbsp;
+      <span class="hi">★ SEND IT ★</span>&nbsp;&nbsp;&nbsp;
+      <span class="dim">🍺 LUKE CURTALE</span>&nbsp;&nbsp;&nbsp;
+      <!-- dupe for seamless -->
+      <span class="hi">★ LUKE'S BUCKS PARTY ★</span>&nbsp;&nbsp;&nbsp;
+      <span class="dim">🍺 THE LEGEND BEGINS</span>&nbsp;&nbsp;&nbsp;
+      <span class="hi">★ 1ST AUGUST 2025 ★</span>&nbsp;&nbsp;&nbsp;
+      <span class="dim">🏠 BBQ AT LUKE'S · 2PM</span>&nbsp;&nbsp;&nbsp;
+      <span class="hi">★ P1 ENTERTAINMENT · 4PM ★</span>&nbsp;&nbsp;&nbsp;
+      <span class="dim">🔥 UNTIL LATE</span>&nbsp;&nbsp;&nbsp;
+      <span class="hi">★ SEND IT ★</span>&nbsp;&nbsp;&nbsp;
+      <span class="dim">🍺 LUKE CURTALE</span>&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat s-total"><div class="stat-n" id="stat-total">0</div><div class="stat-l">Total Guests</div><div class="stat-bar"></div></div>
+    <div class="stat s-yes"><div class="stat-n" id="stat-yes">0</div><div class="stat-l">RSVP Yes</div><div class="stat-bar"></div></div>
+    <div class="stat s-maybe"><div class="stat-n" id="stat-maybe">0</div><div class="stat-l">Maybe</div><div class="stat-bar"></div></div>
+    <div class="stat s-no"><div class="stat-n" id="stat-no">0</div><div class="stat-l">Pending / No</div><div class="stat-bar"></div></div>
+  </div>
+
+  <div class="rsvp-bar-wrap">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">RSVP Progress</div>
+    <div class="rsvp-bar">
+      <div class="rb-yes"     id="rb-yes"     style="flex:0"></div>
+      <div class="rb-maybe"   id="rb-maybe"   style="flex:0"></div>
+      <div class="rb-no"      id="rb-no"      style="flex:0"></div>
+      <div class="rb-pending" id="rb-pending" style="flex:1"></div>
+    </div>
+    <div class="rsvp-legend">
+      <span><span class="dot" style="background:var(--yes)"></span>Yes (<span id="leg-yes">0</span>)</span>
+      <span><span class="dot" style="background:var(--maybe)"></span>Maybe (<span id="leg-maybe">0</span>)</span>
+      <span><span class="dot" style="background:var(--no)"></span>No (<span id="leg-no">0</span>)</span>
+      <span><span class="dot" style="background:var(--pending)"></span>Pending (<span id="leg-pending">0</span>)</span>
+    </div>
+  </div>
+
+  <div class="sec-title">👥 Crew Breakdown</div>
+  <div class="group-cards">
+    <div class="grp-card">
+      <div class="grp-label" style="color:var(--friend-color)">🤜 Friends</div>
+      <div class="grp-num" id="grp-friend">0</div>
+    </div>
+    <div class="grp-card">
+      <div class="grp-label" style="color:var(--family-color)">❤️ Family</div>
+      <div class="grp-num" id="grp-family">0</div>
+    </div>
+    <div class="grp-card">
+      <div class="grp-label" style="color:var(--fot-color)">💃 Fotini's Friends</div>
+      <div class="grp-num" id="grp-fot">0</div>
+    </div>
+    <div class="grp-card">
+      <div class="grp-label" style="color:var(--other-color)">✨ Other</div>
+      <div class="grp-num" id="grp-other">0</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCHEDULE ════ -->
+<div class="page" id="page-schedule">
+  <div class="schedule-hero">
+    <h2>The Day</h2>
+    <div class="date-badge">📅 Friday 1st August 2025</div>
+  </div>
+
+  <div class="cd-strip">
+    <div class="cd-unit"><div class="cd-num" id="cd-d">--</div><div class="cd-lbl">Days</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-h">--</div><div class="cd-lbl">Hours</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-m">--</div><div class="cd-lbl">Mins</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-s">--</div><div class="cd-lbl">Secs</div></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot lit"></div>
+      <div class="tl-card gold">
+        <div class="tl-time">2:00 PM</div>
+        <div class="tl-name">🏠 BBQ at Luke's</div>
+        <div class="tl-desc">The afternoon kick-off at the man of honour's place. Cold ones, snags on the barbie, and good vibes. Leave your dignity at the gate — it won't be needed tonight.</div>
+        <div class="tl-tags"><span class="tl-tag t-bbq">BBQ</span><span class="tl-tag t-bbq">Home Base</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-time">~3:30 PM</div>
+        <div class="tl-name">🚌 Round Up & Roll Out</div>
+        <div class="tl-desc">Wrangle the troops. Sort Ubers, taxis, whatever it takes. No man left behind. Well — within reason.</div>
+        <div class="tl-tags"><span class="tl-tag t-travel">Transit</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot lit"></div>
+      <div class="tl-card gold">
+        <div class="tl-time">4:00 PM</div>
+        <div class="tl-name">🎯 P1 Entertainment</div>
+        <div class="tl-desc">The main event. Racing simulators, mini golf, axe throwing, arcade games, cocktail bar — this is where legends are forged. Doors open, wallets close, chaos begins. Until late.</div>
+        <div class="tl-tags"><span class="tl-tag t-venue">P1 Entertainment</span><span class="tl-tag t-main">Main Event</span><span class="tl-tag t-main">Until Late</span></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-time">Late Night</div>
+        <div class="tl-name">🌙 Whatever Happens Next</div>
+        <div class="tl-desc">Nobody knows. Everyone will talk about it for years.</div>
+        <div class="tl-tags"><span class="tl-tag t-main">TBD</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ GUESTS ════ -->
+<div class="page" id="page-guests">
+  <div style="padding-top:30px">
+    <div class="sec-title">🎟️ Guest List</div>
+  </div>
+  <div class="toolbar">
+    <input class="search-box" id="search-inp" type="text" placeholder="🔍  Search name or notes..." oninput="renderGuests()">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('friend',this)">Friends</button>
+    <button class="filter-btn" onclick="setFilter('family',this)">Family</button>
+    <button class="filter-btn" onclick="setFilter('fot',this)">Fotini's</button>
+    <button class="filter-btn" onclick="setFilter('rsvp-yes',this)">✅ Yes</button>
+    <button class="filter-btn" onclick="setFilter('rsvp-maybe',this)">🤔 Maybe</button>
+    <button class="filter-btn" onclick="setFilter('rsvp-pending',this)">⏳ Pending</button>
+    <button class="add-btn" onclick="openModal()">+ Add Guest</button>
+  </div>
+  <div class="table-wrap">
+    <table class="guest-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Group</th>
+          <th>RSVP <span style="color:#444;font-weight:400">(click to change)</span></th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="guest-tbody"></tbody>
+    </table>
+  </div>
+  <div id="empty-msg" class="empty-state" style="display:none">
+    <div>🕵️</div>
+    <div>No guests match that filter</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>+ Add Guest</h3>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-input" id="inp-name" type="text" placeholder="e.g. Tom Wilson">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Group / Tag</label>
+      <select class="form-select" id="inp-group">
+        <option value="friend">🤜 Friend</option>
+        <option value="family">❤️ Family</option>
+        <option value="fot">💃 Fotini's Friend</option>
+        <option value="other">✨ Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">RSVP Status</label>
+      <select class="form-select" id="inp-rsvp">
+        <option value="pending">⏳ Pending</option>
+        <option value="yes">✅ Yes</option>
+        <option value="maybe">🤔 Maybe</option>
+        <option value="no">❌ No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes (optional)</label>
+      <input class="form-input" id="inp-notes" type="text" placeholder="e.g. Flying in from Sydney...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveGuest()">Add to List 🍺</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───
+let guests = [
+  {id:1,  name:"Luke Curtale",   group:"groom",  rsvp:"yes",     notes:"The legend himself 👑"},
+  {id:2,  name:"Luke Z",         group:"friend", rsvp:"pending", notes:""},
+  {id:3,  name:"Matt R",         group:"friend", rsvp:"pending", notes:""},
+  {id:4,  name:"Alex K",         group:"friend", rsvp:"pending", notes:""},
+  {id:5,  name:"Paris S",        group:"friend", rsvp:"pending", notes:""},
+  {id:6,  name:"Andrew Thomson", group:"friend", rsvp:"pending", notes:""},
+  {id:7,  name:"Sammid",         group:"friend", rsvp:"pending", notes:"NSW"},
+  {id:8,  name:"James",          group:"friend", rsvp:"pending", notes:"VIC"},
+  {id:9,  name:"Tim Lee",        group:"friend", rsvp:"pending", notes:""},
+  {id:10, name:"Jeff Wong",      group:"friend", rsvp:"pending", notes:""},
+  {id:11, name:"Jackson W",      group:"friend", rsvp:"pending", notes:""},
+  {id:12, name:"Adam R",         group:"friend", rsvp:"pending", notes:""},
+  {id:13, name:"Zac",            group:"friend", rsvp:"pending", notes:""},
+  {id:14, name:"Aria",           group:"friend", rsvp:"pending", notes:""},
+  {id:15, name:"Michael",        group:"friend", rsvp:"pending", notes:""},
+  {id:16, name:"Andreas",        group:"friend", rsvp:"pending", notes:""},
+  {id:17, name:"Carlo",          group:"family", rsvp:"pending", notes:""},
+  {id:18, name:"Anthony",        group:"family", rsvp:"pending", notes:""},
+  {id:19, name:"Harry",          group:"family", rsvp:"pending", notes:""},
+  {id:20, name:"Maki",           group:"fot",    rsvp:"pending", notes:"Fotini's friend"},
+  {id:21, name:"George M",       group:"fot",    rsvp:"pending", notes:"Fotini's friend"},
+  {id:22, name:"Ari",            group:"fot",    rsvp:"pending", notes:"Fotini's friend"},
+  {id:23, name:"Chris",          group:"friend", rsvp:"maybe",   notes:"Maybe"},
+  {id:24, name:"David",          group:"friend", rsvp:"maybe",   notes:"Maybe"},
+  {id:25, name:"Kosta",          group:"friend", rsvp:"maybe",   notes:"Maybe"},
+];
+let nextId = 26;
+let activeFilter = 'all';
+
+// ─── NAV ───
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+  if(id==='guests') renderGuests();
+  updateStats();
+}
+
+// ─── STATS ───
+function updateStats() {
+  const total   = guests.length;
+  const yes     = guests.filter(g=>g.rsvp==='yes').length;
+  const maybe   = guests.filter(g=>g.rsvp==='maybe').length;
+  const no      = guests.filter(g=>g.rsvp==='no').length;
+  const pending = guests.filter(g=>g.rsvp==='pending').length;
+
+  document.getElementById('stat-total').textContent  = total;
+  document.getElementById('stat-yes').textContent    = yes;
+  document.getElementById('stat-maybe').textContent  = maybe;
+  document.getElementById('stat-no').textContent     = no + pending;
+
+  const t = Math.max(total, 1);
+  document.getElementById('rb-yes').style.flex     = yes     / t;
+  document.getElementById('rb-maybe').style.flex   = maybe   / t;
+  document.getElementById('rb-no').style.flex      = no      / t;
+  document.getElementById('rb-pending').style.flex = Math.max(pending / t, 0.01);
+
+  document.getElementById('leg-yes').textContent     = yes;
+  document.getElementById('leg-maybe').textContent   = maybe;
+  document.getElementById('leg-no').textContent      = no;
+  document.getElementById('leg-pending').textContent = pending;
+
+  document.getElementById('grp-friend').textContent = guests.filter(g=>g.group==='friend').length;
+  document.getElementById('grp-family').textContent = guests.filter(g=>g.group==='family').length;
+  document.getElementById('grp-fot').textContent    = guests.filter(g=>g.group==='fot').length;
+  document.getElementById('grp-other').textContent  = guests.filter(g=>g.group==='other').length;
+}
+
+// ─── RENDER GUESTS ───
+function tagPill(group) {
+  const m = {groom:'t-pill-groom',friend:'t-pill-friend',family:'t-pill-family',fot:'t-pill-fot',other:'t-pill-other'};
+  const l = {groom:'👑 Groom',friend:'Friend',family:'Family',fot:"Fotini's",other:'Other'};
+  return `<span class="tag-pill ${m[group]||'t-pill-other'}">${l[group]||group}</span>`;
+}
+function rsvpBadge(rsvp, id) {
+  const cfg = {
+    yes:    {cls:'rv-yes',    label:'✅ Yes'},
+    no:     {cls:'rv-no',     label:'❌ No'},
+    maybe:  {cls:'rv-maybe',  label:'🤔 Maybe'},
+    pending:{cls:'rv-pending',label:'⏳ Pending'},
+  };
+  const c = cfg[rsvp]||cfg.pending;
+  return `<span class="rsvp-badge ${c.cls}" onclick="cycleRSVP(${id})" title="Click to toggle">${c.label}</span>`;
+}
+
+function renderGuests() {
+  const search = (document.getElementById('search-inp').value||'').toLowerCase();
+  const tbody = document.getElementById('guest-tbody');
+  let visible = 0;
+
+  tbody.innerHTML = guests.map(g => {
+    const matchSearch = g.name.toLowerCase().includes(search) || g.notes.toLowerCase().includes(search);
+    let matchFilter = activeFilter==='all';
+    if(activeFilter==='friend')       matchFilter = g.group==='friend';
+    if(activeFilter==='family')       matchFilter = g.group==='family';
+    if(activeFilter==='fot')          matchFilter = g.group==='fot';
+    if(activeFilter==='rsvp-yes')     matchFilter = g.rsvp==='yes';
+    if(activeFilter==='rsvp-maybe')   matchFilter = g.rsvp==='maybe';
+    if(activeFilter==='rsvp-pending') matchFilter = g.rsvp==='pending';
+    const hidden = (!matchSearch || !matchFilter) ? 'hidden' : '';
+    if(!hidden) visible++;
+
+    return `<tr class="guest-row ${hidden}" data-id="${g.id}">
+      <td class="name-cell">${g.name}</td>
+      <td>${tagPill(g.group)}</td>
+      <td>${rsvpBadge(g.rsvp, g.id)}</td>
+      <td><input class="notes-input" value="${g.notes.replace(/"/g,'&quot;')}" placeholder="Add note…" onchange="updateNote(${g.id},this.value)"></td>
+      <td>${g.group!=='groom'?`<button class="action-btn del" onclick="removeGuest(${g.id})">✕</button>`:''}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('empty-msg').style.display = visible===0 ? 'block' : 'none';
+  updateStats();
+}
+
+// ─── INTERACTIONS ───
+function cycleRSVP(id) {
+  const g = guests.find(g=>g.id===id);
+  if(!g) return;
+  const seq = ['pending','yes','maybe','no'];
+  g.rsvp = seq[(seq.indexOf(g.rsvp)+1)%seq.length];
+  renderGuests();
+}
+function updateNote(id, val) {
+  const g = guests.find(g=>g.id===id);
+  if(g) { g.notes=val; updateStats(); }
+}
+function removeGuest(id) {
+  if(confirm('Remove this guest from the list?')) {
+    guests = guests.filter(g=>g.id!==id);
+    renderGuests();
+  }
+}
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGuests();
+}
+
+// ─── MODAL ───
+function openModal() {
+  const m = document.getElementById('modal');
+  m.classList.add('open');
+  document.getElementById('inp-name').value  = '';
+  document.getElementById('inp-notes').value = '';
+  document.getElementById('inp-rsvp').value  = 'pending';
+  document.getElementById('inp-group').value = 'friend';
+  setTimeout(()=>document.getElementById('inp-name').focus(), 100);
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function saveGuest() {
+  const name = document.getElementById('inp-name').value.trim();
+  if(!name) { document.getElementById('inp-name').focus(); return; }
+  guests.push({
+    id: nextId++,
+    name,
+    group: document.getElementById('inp-group').value,
+    rsvp:  document.getElementById('inp-rsvp').value,
+    notes: document.getElementById('inp-notes').value.trim(),
+  });
+  closeModal();
+  renderGuests();
+}
+document.getElementById('modal').addEventListener('click', e => { if(e.target===document.getElementById('modal')) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Enter' && document.getElementById('modal').classList.contains('open')) saveGuest(); });
+
+// ─── COUNTDOWN ───
+function tick() {
+  const target = new Date('2025-08-01T14:00:00+10:00');
+  const diff = target - new Date();
+  if(diff<=0) {
+    ['cd-d','cd-h','cd-m','cd-s'].forEach((id,i)=>document.getElementById(id).textContent=['🎉','ITS','ON','!!'][i]);
+    return;
+  }
+  document.getElementById('cd-d').textContent = String(Math.floor(diff/86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(Math.floor(diff%86400000/3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(Math.floor(diff%3600000/60000)).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(Math.floor(diff%60000/1000)).padStart(2,'0');
+}
+tick(); setInterval(tick, 1000);
+
+// INIT
+updateStats();
+</script>
+</body>
+</html>
